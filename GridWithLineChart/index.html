@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+  <script src="https://cdn.vaadin.com/vaadin-elements/latest/webcomponentsjs/webcomponents-lite.js"></script>
+  <link href="https://cdn.vaadin.com/vaadin-elements/latest/vaadin-grid/vaadin-grid.html" rel="import">
+  <script>
+  function getJSON(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        callback(JSON.parse(xhr.responseText));
+      }
+    };
+    xhr.open('GET', url, true);
+    xhr.send();
+  }
+  </script>
+</head>
+<body>
+<vaadin-grid>
+  <table>
+    <colgroup>
+      <col name="projectName">
+      <col name="evolution.q1">
+      <col name="evolution.q2">
+      <col name="evolution.q3">
+      <col name="evolution.q4">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Quarter 1</th>
+        <th>Quarter 2 </th>
+        <th>Quarter 3</th>
+        <th>Quarter 4</th>
+      </tr>
+    </thead>
+  </table>
+</vaadin-grid>
+<div id="myDiv"></div>
+</body>
+<!-- Latest compiled and minified plotly.js JavaScript -->
+<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+  var grid = grid || document.querySelector('vaadin-grid');
+  var data = [
+    {projectName:'Project A', evolution: {q1:10000,q2:12000,q3:11900,q4:11850} },
+    {projectName:'Project B', evolution: {q1:8765,q2:8800,q3:8850,q4:9125} },
+    {projectName:'Project C', evolution: {q1:12999,q2:13100,q3:14200,q4:15000} }
+  ];
+ //display when all is ready/loaded?:
+  HTMLImports.whenReady(function() {
+    //assign data to the grid
+    grid.items = data
+  });
+  //from object to array: http://stackoverflow.com/questions/6857468/converting-a-js-object-to-an-array
+var myObj = data[0].evolution;
+var projA = $.map(myObj, function(value, index) {
+    return [value];
+});
+var myObj = data[1].evolution;
+var projB = $.map(myObj, function(value, index) {
+    return [value];
+});
+var myObj = data[2].evolution;
+var projC = $.map(myObj, function(value, index) {
+    return [value];
+});
+trace1 = {
+    type: 'scatter',
+    x: [1, 2, 3, 4],
+    y: projA,
+    mode: 'lines',
+    name: data[0].projectName,
+    line: {
+      color: 'rgb(219, 64, 82)',
+      width: 1.5
+    }
+  };
+
+  trace2 = {
+    type: 'scatter',
+    x: [1, 2, 3, 4],
+    y: projB,
+    mode: 'lines',
+    name: data[1].projectName,
+    line: {
+      color: 'rgb(55, 128, 191)',
+      width: 1.5
+    }
+  };
+  trace3 = {
+    type: 'scatter',
+    x: [1, 2, 3, 4],
+    y: projC,
+    mode: 'lines',
+    name: data[2].projectName,
+    line: {
+      width: 1.5
+    }
+  };
+  var mydata = [trace1, trace2,trace3];
+  Plotly.newPlot('myDiv', mydata);
+
+</script>
+</html>
